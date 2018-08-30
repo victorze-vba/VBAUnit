@@ -1,5 +1,5 @@
 # VBAUnit
-## VBAUnit Unit Testing Library for VBA
+## Unit Testing Library for VBA
 
 ### Example
 ```vb
@@ -34,3 +34,5 @@ Sub TestApp()
 End Sub
 ```
 
+### Multiple Asserts
+![code](https://raw.githubusercontent.com/vba-dev/VBAUnit/master/code.png)
