@@ -56,10 +56,9 @@ End Sub
 Sub FailAssertTrue()
     Dim Test As New VBAUnit
     
-     With Test.It("Test Fail AssertEquals")
-        .AssertEquals 5, 6
-        .AssertEquals "VBA", "VBA Excel"
-        .AssertEquals Now + 1, Now
+     With Test.It("Test Fail AssertTrue")
+        .AssertTrue False
+        .AssertTrue 5 = 6
     End With
 End Sub
 
