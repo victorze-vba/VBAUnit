@@ -21,9 +21,7 @@ Private CountRuns As Integer
 
 Public Function AssertEquals(Expected As Variant, Actual As Variant) As VBAUnit
     If Expected <> Actual Then
-        PrintFailDescription
-        PrintExpected Expected
-        PrintBut Actual
+        PrintMessage Expected, Actual
     End If
 
     AddRun
@@ -32,9 +30,7 @@ End Function
 
 Public Function AssertNotEquals(Unexpected As Variant, Actual As Variant) As VBAUnit
     If Unexpected = Actual Then
-        PrintFailDescription
-        OutputMessage.Add Chr(9) & "Unexpected: " & Unexpected
-        OutputMessage.Add Chr(9) & "       But: " & Actual
+        PrintMessageUnexpected Unexpected, Actual
     End If
     
     AddRun
@@ -43,9 +39,7 @@ End Function
 
 Public Function AssertTrue(Condition As Boolean) As VBAUnit
     If Condition = False Then
-        PrintFailDescription
-        PrintExpected "True"
-        PrintBut Condition
+        PrintMessage "True", Condition
     End If
     
     AddRun
@@ -54,9 +48,7 @@ End Function
 
 Public Function AssertFalse(Condition As Boolean) As VBAUnit
     If Condition = True Then
-        PrintFailDescription
-        PrintExpected "False"
-        PrintBut Condition
+        PrintMessage "False", Condition
     End If
     
     AddRun
@@ -65,14 +57,10 @@ End Function
 
 Public Function AssertSame(Expected As Variant, Actual As Variant) As VBAUnit
     If Not Expected Is Actual Then
-        PrintFailDescription
-        
         If TypeName(Expected) = TypeName(Actual) Then
-            PrintExpected "object " & TypeName(Expected)
-            PrintBut "other object " & TypeName(Actual)
+            PrintMessage "object " & TypeName(Expected), "other object " & TypeName(Actual)
         Else
-            PrintExpected "object " & TypeName(Expected)
-            PrintBut "object " & TypeName(Actual)
+            PrintMessage "object " & TypeName(Expected), "object " & TypeName(Actual)
         End If
     End If
     
@@ -82,9 +70,7 @@ End Function
 
 Public Function AssertNotSame(Unexpected As Variant, Actual As Variant) As VBAUnit
     If Unexpected Is Actual Then
-        PrintFailDescription
-        OutputMessage.Add Chr(9) & "Unexpected: " & "object " & TypeName(Unexpected)
-        OutputMessage.Add Chr(9) & "       But: " & "same object " & TypeName(Actual)
+        PrintMessageUnexpected "object " & TypeName(Unexpected), "same object " & TypeName(Actual)
     End If
     
     AddRun
@@ -94,15 +80,11 @@ End Function
 Public Function AssertNull(Value As Variant) As VBAUnit
     If IsObject(Value) Then
         If TypeName(Value) <> "Nothing" Then
-            PrintFailDescription
-            PrintExpected "Nothing"
-            PrintBut TypeName(Value)
+            PrintMessage "Nothing", TypeName(Value)
         End If
     Else
         If TypeName(Value) <> "Empty" Then
-            PrintFailDescription
-            PrintExpected "Empty"
-            PrintBut TypeName(Value)
+            PrintMessage "Empty", TypeName(Value)
         End If
     End If
     
@@ -113,15 +95,11 @@ End Function
 Public Function AssertNotNull(Value As Variant) As VBAUnit
     If IsObject(Value) Then
         If TypeName(Value) = "Nothing" Then
-            PrintFailDescription
-            PrintExpected "Not Nothing"
-            PrintBut TypeName(Value)
+            PrintMessage "Not Nothing", TypeName(Value)
         End If
     Else
         If TypeName(Value) = "Empty" Then
-            PrintFailDescription
-            PrintExpected "Not Empty"
-            PrintBut TypeName(Value)
+            PrintMessage "Not Empty", TypeName(Value)
         End If
     End If
     
@@ -129,19 +107,23 @@ Public Function AssertNotNull(Value As Variant) As VBAUnit
     Set AssertNotNull = Me
 End Function
 
-Sub AddFailure()
-    CountFailures = CountFailures + 1
-End Sub
-
-Sub AddRun()
-    CountRuns = CountRuns + 1
-End Sub
-
 Public Function It(Description As String) As VBAUnit
     pDescription = Description
     
     Set It = Me
 End Function
+
+Private Sub PrintMessage(Expected As Variant, But As Variant)
+    PrintFailDescription
+    PrintExpected Expected
+    PrintBut But
+End Sub
+
+Private Sub PrintMessageUnexpected(Unexpected As Variant, But As Variant)
+    PrintFailDescription
+    PrintUnexpected Unexpected
+    PrintButUnexpected But
+End Sub
 
 Private Sub PrintFailDescription()
     AddFailure
@@ -162,6 +144,22 @@ End Sub
 
 Private Sub PrintBut(Value As Variant)
     OutputMessage.Add Chr(9) & "     But: " & Value
+End Sub
+
+Private Sub PrintUnexpected(Value As Variant)
+    OutputMessage.Add Chr(9) & "Unexpected: " & Value
+End Sub
+
+Private Sub PrintButUnexpected(Value As Variant)
+    OutputMessage.Add Chr(9) & "       But: " & Value
+End Sub
+
+Private Sub AddFailure()
+    CountFailures = CountFailures + 1
+End Sub
+
+Private Sub AddRun()
+    CountRuns = CountRuns + 1
 End Sub
 
 Private Sub Class_Terminate()
