@@ -4,8 +4,6 @@ Unit Testing Library for VBA
 
 [Download file](https://github.com/victorze-vba/VBAUnit/raw/master/Example.xlsm)
 
-## Unit Testing Library for VBA
-
 ### Example
 ![example](https://raw.githubusercontent.com/vba-dev/VBAUnit/master/example.png)
 
